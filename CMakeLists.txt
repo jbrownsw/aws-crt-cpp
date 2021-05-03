@@ -34,6 +34,7 @@ option(BYO_CRYPTO "Don't build a tls implementation or link against a crypto int
 # ToDo: Scripts to populate environment variables via the CLI and IoT, SecretsManager calls
 #
 option(ENABLE_PROXY_INTEGRATION_TESTS "Whether or not to build and run the proxy integration tests that rely on a proxy server installed and running locally" OFF)
+option(USE_OPENSSL "Set this if you want to use your system's OpenSSL 1.0.2/1.1.1 compatible libcrypto" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(AwsCheckHeadersCxx)
@@ -105,7 +106,9 @@ if (BUILD_DEPS)
         if (ANDROID)
             set(DISABLE_GO ON)
         endif()
-        add_subdirectory(crt/aws-lc)
+        if (NOT USE_OPENSSL)
+            add_subdirectory(crt/aws-lc)
+        endif()
         add_subdirectory(crt/s2n)
     endif()
 
